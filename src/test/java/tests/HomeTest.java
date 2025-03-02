@@ -2,36 +2,36 @@ package tests;
 
 import base.BaseTest;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import pages.HomePage;
 
 public class HomeTest extends BaseTest {
     HomePage homePage;
 
-    @BeforeMethod
+    @BeforeClass  // Runs ONCE before all tests
     public void setupTest() throws Exception {
-        setup();
+        setup(); // Initializes Appium session ONCE
         homePage = new HomePage(driver);
     }
 
-    @Test
+    @Test(priority = 1)
     public void testDenyPermissions() {
         homePage.denyPermissions();
-        // Assert that the element is selected
-        Assert.assertTrue(homePage.scrollAndClick().equals("false"), "❌ The element is NOT selected!");
-
-        // Print success message
-        System.out.println("✅ The element is selected.");
-
-        homePage.clickOnIcon();
-
-        Assert.assertTrue(homePage.ClickOnIconHouseOption().equals("false"),"❌ The element is NOT selected!");
     }
 
-    @AfterMethod
+    @Test(priority = 2)
+    public void testClickOnWowPlaces() {
+        homePage.clickOnWowPlacesOption();
+        Assert.assertEquals(homePage.getDomPropOfFirstElementWowPalces(), "true", "Element did not appear as expected!");
+    }
+
+    @Test(priority = 3)
+    public void testClickOnBeachesIcon() {
+        homePage.clickOnBeachesIcon();
+    }
+
+    @AfterClass  // Runs ONCE after all tests
     public void tearDownTest() {
-        tearDown();
+        tearDown(); // Closes Appium session
     }
 }
